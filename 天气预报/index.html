@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>天气预报</title>
+    <script src="libs/jquery.js"></script>
+    <script src="libs/template.js" type="text/javascript" charset="utf-8"></script>
+    
+</head>
+<body>
+	<script id="template" type="text/html">
+			{{each dat as abc index}}
+				<p>{{abc.currentCity}}</p>
+				<p>pm2.5:{{abc.pm25}}</p>
+				{{each abc.weather_data as cd}}
+						<ul>
+							<li><img src="{{cd.dayPictureUrl}}"/></li>
+							<li><img src="{{cd.nightPictureUrl}}"/></li>
+							<li>{{cd.date}}</li>
+							<li>{{cd.weather}}</li>
+							<li>{{cd.wind}}</li>
+							<li>{{cd.temperature}}</li>
+							{{each abc.index as ef}}
+								<li>{{ef.tipt}}:{{ef.des  }}</li>
+							{{/each}}
+						</ul>
+					
+				{{/each}}	
+				
+			{{/each}}
+	</script>
+	<div>
+		
+	</div>
+</body>
+<script type="text/javascript">
+    // 根据开放的API接口及相关的属性信息，获取服务器中的数据
+    // getJSON()获取json数据
+    // url:请求的Url接口地址，是服务器对外开放的一个接口
+    $.getJSON({
+        url:'http://api.map.baidu.com/telematics/v3/weather?callback=?',
+        data:{
+            ak:'Oh0pi6YdU9pOMLkKrPCvS0HZFoibCZrQ',
+            location:'郑州市',
+            output:'json'
+        },
+        success:function(data){
+//          console.log(data)
+            var mess = {
+            	dat:data.results
+            }
+            console.log(mess.dat)
+            $(mess.dat).each(function(){
+            	console.log(this.weather_data)
+            })
+            var html = template('template',mess)
+            $('div').html(html)
+        }
+    })
+</script>
+</html>
